@@ -1,5 +1,5 @@
 @if(isAddTaskVisibile){
-<app-new-task (cancel)="onAddTaskCancel()" />
+<app-new-task (cancel)="onAddTaskCancel()" (add)="onAddTask($event)" />
 }
 
 <section id="tasks">
