@@ -1,17 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { TaskModel } from './task.model';
+import { TasksService } from '../tasks.service';
 
 @Component({
   selector: 'app-task',
-  imports: [],
   templateUrl: './task.html',
   styleUrl: './task.css',
+  standalone: false,
 })
 export class Task {
   @Input() task!: TaskModel;
-  @Output() complete = new EventEmitter<string>();
+  
+  private tasksService = inject(TasksService);
 
   onCompleteTask() {
-    this.complete.emit(this.task.id);
+    this.tasksService.removeTask(this.task.id);
   }
 }

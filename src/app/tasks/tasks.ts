@@ -1,69 +1,32 @@
 import { Component, Input } from '@angular/core';
-import { Task } from "./task/task";
-import { NewTask } from "./new-task/new-task";
+import { Task } from './task/task';
+import { NewTask } from './new-task/new-task';
 import { NewTaskData } from './task/task.model';
+import { TasksService } from './tasks.service';
 
 @Component({
   selector: 'app-tasks',
-  imports: [Task, NewTask],
   templateUrl: './tasks.html',
-  styleUrl: './tasks.css'
+  styleUrl: './tasks.css',
+  standalone: false
 })
 export class Tasks {
-  @Input({required: true}) userId!: string;
-  @Input({required: true}) name!: string;
+  @Input({ required: true }) userId!: string;
+  @Input({ required: true }) name!: string;
 
   isAddTaskVisibile = false;
 
-  tasks = [
-    {
-      id: 't1',
-      userId: 'u1',
-      title: 'Master Angular',
-      summary: 'Learn everything of Angular quickly!',
-      dueDate: '2024-12-31'
-    },
-    {
-      id: 't2',
-      userId: 'u3',
-      title: 'Build first prototype',
-      summary: 'Do whatever is wrote before this!',
-      dueDate: '2024-06-31'
-    },
-    {
-      id: 't3',
-      userId: 'u3',
-      title: 'Prepare issue template',
-      summary: 'Tanto va la gatta al lardo che ci mette lo zampino!',
-      dueDate: '2024-06-24'
-    },
-  ];
+  constructor(private tasksService: TasksService) {}
 
   get selectedUserTasks() {
-    return this.tasks.filter(t => t.userId === this.userId);
-  }
-
-  onCompleteTask(id: string) {
-    this.tasks = this.tasks.filter(t => t.id !== id);
+    return this.tasksService.getUserTasks(this.userId);
   }
 
   onStartAddTask() {
     this.isAddTaskVisibile = true;
   }
 
-  onAddTaskCancel() {
-    this.isAddTaskVisibile = false;
-  }
-
-  onAddTask(taskData: NewTaskData) {
-    this.tasks.push({
-      id: new Date().getTime().toString(),
-      title: taskData.title,
-      summary: taskData.summary,
-      dueDate: taskData.date,
-      userId: this.userId
-    });
-
+  onCloseAddTask() {
     this.isAddTaskVisibile = false;
   }
 }
